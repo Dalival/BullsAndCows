@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BikyAndKorovy
 {
@@ -13,11 +14,14 @@ namespace BikyAndKorovy
 
         public List<Turn> HumanTurns { get; set; }
 
+        public List<int> ProbablyVariants { get; set; }
+
 
         public Game()
         {
             ComputerTurns = new List<Turn>();
             HumanTurns = new List<Turn>();
+            ProbablyVariants = InitializeProbablyVariants();
         }
 
 
@@ -25,6 +29,7 @@ namespace BikyAndKorovy
         {
             ComputerNumbers = GenerateNumber();
             HumanNumbers = GetUserInputNumber();
+            Console.WriteLine($"Изначальное количество возможных вариантов числа соперника: { ProbablyVariants.Count }");
         }
 
 
@@ -67,6 +72,11 @@ namespace BikyAndKorovy
                 }
 
                 var numberString = result.ToString();
+                if (result < 1000)
+                {
+                    numberString = numberString.Insert(0, "0");
+                }
+
                 Console.WriteLine("Замечательно. Ваше число: " + numberString);
 
                 var humanNumber = new List<int>
@@ -89,23 +99,36 @@ namespace BikyAndKorovy
             }
 
             var numberString = number.ToString();
+            if (number < 1000)
+            {
+                numberString = numberString.Insert(0, "0");
+            }
 
             var firstSymbol = numberString[0];
             var secondSymbol = numberString[1];
             var thirdSymbol = numberString[2];
             var forthSymbol = numberString[3];
 
-            if (firstSymbol == secondSymbol
-                || firstSymbol == thirdSymbol
-                || firstSymbol == forthSymbol
-                || secondSymbol == thirdSymbol
-                || secondSymbol == forthSymbol
-                || thirdSymbol == forthSymbol)
+            return firstSymbol != secondSymbol
+                   && firstSymbol != thirdSymbol
+                   && firstSymbol != forthSymbol
+                   && secondSymbol != thirdSymbol
+                   && secondSymbol != forthSymbol
+                   && thirdSymbol != forthSymbol;
+        }
+
+        private List<int> InitializeProbablyVariants()
+        {
+            var variants = new List<int>();
+
+            for (var i = 0123; i < 9877; i++)
             {
-                return false;
+                variants.Add(i);
             }
 
-            return true;
+            variants = variants.Where(CheckIsNumberValid).ToList();
+
+            return variants;
         }
     }
 }
