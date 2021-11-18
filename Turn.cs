@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BikyAndKorovy
+namespace BullsAndCows
 {
     public class Turn
     {
