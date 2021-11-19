@@ -8,19 +8,19 @@ namespace BullsAndCows
     {
         public Number ComputerNumber { get; set; }
 
-        public Number HumanNumber { get; set; }
+        public Number UserNumber { get; set; }
 
-        public List<Number> ComputerTurns { get; set; }
+        public List<Attempt> ComputerTurns { get; set; }
 
-        public List<Number> HumanTurns { get; set; }
+        public List<Attempt> UserTurns { get; set; }
 
         public List<int> ProbablyVariants { get; set; }
 
 
         public Game()
         {
-            ComputerTurns = new List<Number>();
-            HumanTurns = new List<Number>();
+            ComputerTurns = new List<Attempt>();
+            UserTurns = new List<Attempt>();
             InitializeComputerNumber();
             InitializeProbablyVariants();
         }
@@ -28,9 +28,23 @@ namespace BullsAndCows
 
         public void Start()
         {
-            HumanNumber = GetUserInputNumber();
-            Console.WriteLine($"Ваше число: {HumanNumber.Digits[0]}{HumanNumber.Digits[1]}{HumanNumber.Digits[2]}{HumanNumber.Digits[3]}");
-            GiveUserTurn();
+            UserNumber = GetUserInputNumber();
+            Console.WriteLine($"Ваше число: {UserNumber}");
+            Console.WriteLine($"Число соперника: {ComputerNumber}");
+            while (true)
+            {
+                UserTurns.Add(GiveUserTurn());
+
+                foreach (var attempt in UserTurns)
+                {
+                    Console.WriteLine(attempt);
+                }
+
+                if (UserTurns.Last().Cows == 4)
+                {
+                    break;
+                }
+            }
         }
 
 
@@ -41,62 +55,32 @@ namespace BullsAndCows
                 Console.WriteLine("Введите четырёхзначное число. Каждую цифру можно использовать только один раз.\n");
                 var input = Console.ReadLine();
 
-                if (!int.TryParse(input, out var userNumber))
+                if (!int.TryParse(input, out var numberInt))
                 {
                     Console.WriteLine("Неверный ввод. Попробуйте еще раз.\n");
                     continue;
                 }
 
-                if (!IsNumberValid(userNumber))
+                if (!IsNumberValid(numberInt))
                 {
                     Console.WriteLine("Недопустимое число. Попробуйте еще раз.\n");
                     continue;
                 }
 
-                var numberString = userNumber.ToString();
-                if (userNumber < 1000)
+                var numberString = numberInt.ToString();
+                if (numberInt < 1000)
                 {
                     numberString = numberString.Insert(0, "0");
                 }
 
-                var humanNumber = new Number(
+                var number = new Number(
                     int.Parse(numberString[0].ToString()),
                     int.Parse(numberString[1].ToString()),
                     int.Parse(numberString[2].ToString()),
                     int.Parse(numberString[3].ToString()));
 
-                return humanNumber;
+                return number;
             }
-        }
-
-        private bool IsNumberValid(int number)
-        {
-            if (number is < 123 or > 9876)
-            {
-                return false;
-            }
-
-            var numberString = number.ToString();
-            if (number < 1000)
-            {
-                numberString = numberString.Insert(0, "0");
-            }
-
-            var uniqDigitsCount = numberString.Distinct().Count();
-
-            return uniqDigitsCount == numberString.Length;
-
-            // var firstSymbol = numberString[0];
-            // var secondSymbol = numberString[1];
-            // var thirdSymbol = numberString[2];
-            // var forthSymbol = numberString[3];
-            //
-            // return firstSymbol != secondSymbol
-            //        && firstSymbol != thirdSymbol
-            //        && firstSymbol != forthSymbol
-            //        && secondSymbol != thirdSymbol
-            //        && secondSymbol != forthSymbol
-            //        && thirdSymbol != forthSymbol;
         }
 
         private void InitializeProbablyVariants()
@@ -130,8 +114,58 @@ namespace BullsAndCows
             ComputerNumber = new Number(digits);
         }
 
-        private void GiveUserTurn()
+        private bool IsNumberValid(int number)
         {
+            if (number is < 123 or > 9876)
+            {
+                return false;
+            }
+
+            var numberString = number.ToString();
+            if (number < 1000)
+            {
+                numberString = numberString.Insert(0, "0");
+            }
+
+            var uniqDigitsCount = numberString.Distinct().Count();
+
+            return uniqDigitsCount == numberString.Length;
+
+            // var firstSymbol = numberString[0];
+            // var secondSymbol = numberString[1];
+            // var thirdSymbol = numberString[2];
+            // var forthSymbol = numberString[3];
+            //
+            // return firstSymbol != secondSymbol
+            //        && firstSymbol != thirdSymbol
+            //        && firstSymbol != forthSymbol
+            //        && secondSymbol != thirdSymbol
+            //        && secondSymbol != forthSymbol
+            //        && thirdSymbol != forthSymbol;
+        }
+
+        private Attempt GiveUserTurn()
+        {
+            var number = GetUserInputNumber();
+            var bulls = 0;
+            var cows = 0;
+            foreach (var digit in number.Digits)
+            {
+                var indexInEnteredNumber = number.Digits.IndexOf(digit);
+                var indexInComputerNumber = ComputerNumber.Digits.IndexOf(digit);
+                if (indexInComputerNumber == indexInEnteredNumber)
+                {
+                    cows++;
+                }
+                else if (indexInComputerNumber != -1)
+                {
+                    bulls++;
+                }
+            }
+
+            var attempt = new Attempt(number, bulls, cows);
+
+            return attempt;
         }
     }
 }
