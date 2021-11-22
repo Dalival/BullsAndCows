@@ -33,7 +33,8 @@ namespace BullsAndCows
             Console.WriteLine($"Число соперника: {ComputerNumber}");
             while (true)
             {
-                UserTurns.Add(GiveUserTurn());
+                UserTurns.Add(MakeAttempt(GetUserInputNumber()));
+                ComputerTurns.Add(MakeAttempt(GuessNumber()));
 
                 foreach (var attempt in UserTurns)
                 {
@@ -144,9 +145,8 @@ namespace BullsAndCows
             //        && thirdSymbol != forthSymbol;
         }
 
-        private Attempt GiveUserTurn()
+        private Attempt MakeAttempt(Number number)
         {
-            var number = GetUserInputNumber();
             var bulls = 0;
             var cows = 0;
             foreach (var digit in number.Digits)
@@ -166,6 +166,11 @@ namespace BullsAndCows
             var attempt = new Attempt(number, bulls, cows);
 
             return attempt;
+        }
+
+        private Number GuessNumber()
+        {
+            throw new NotImplementedException();
         }
     }
 }
