@@ -17,6 +17,7 @@ namespace BullsAndCows
             Digits = new List<int> { first, second, third, fourth };
         }
 
+
         public override string ToString() => $"{Digits[0]}{Digits[1]}{Digits[2]}{Digits[3]}";
     }
 }
