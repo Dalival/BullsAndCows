@@ -10,17 +10,17 @@ namespace BullsAndCows
 
         public Number UserNumber { get; set; }
 
-        public List<Attempt> ComputerTurns { get; set; }
+        public List<Attempt> ComputerAttempts { get; set; }
 
-        public List<Attempt> UserTurns { get; set; }
+        public List<Attempt> UserAttempts { get; set; }
 
         public List<int> ProbablyVariants { get; set; }
 
 
         public Game()
         {
-            ComputerTurns = new List<Attempt>();
-            UserTurns = new List<Attempt>();
+            ComputerAttempts = new List<Attempt>();
+            UserAttempts = new List<Attempt>();
             InitializeComputerNumber();
             InitializeProbablyVariants();
         }
@@ -33,15 +33,15 @@ namespace BullsAndCows
             Console.WriteLine($"Число соперника: {ComputerNumber}");
             while (true)
             {
-                UserTurns.Add(MakeAttempt(GetUserInputNumber()));
-                ComputerTurns.Add(MakeAttempt(GuessNumber()));
+                UserAttempts.Add(MakeAttempt(GetUserInputNumber()));
+                ComputerAttempts.Add(MakeAttempt(GuessNumber()));
 
-                foreach (var attempt in UserTurns)
+                foreach (var attempt in UserAttempts)
                 {
                     Console.WriteLine(attempt);
                 }
 
-                if (UserTurns.Last().Cows == 4)
+                if (UserAttempts.Last().Cows == 4)
                 {
                     break;
                 }
