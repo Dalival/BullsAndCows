@@ -6,11 +6,11 @@ namespace BullsAndCows
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("\nЭто тестовый образец игры \"Быки и коровы\". Против вас будет играть компьютер." +
-                              "\nВам нужно загадать число, а затем угадывать число компьютера. Пока что" +
-                              "\nигра устроена так, что компьютер не будет гадать ваше число. То есть он" +
-                              "\nкаждый раз пропускает свой ход. На данном этапе важно научить его правильно" +
-                              "\nотвечать на ваши ходы.\n");
+            Console.WriteLine("\nThis is a test sample of the \"Bulls and Cows\" game." +
+                              "\nPick a number and then try to guess the computer's number." +
+                              "\nFor now computer will not try to guess your number." +
+                              "\nIt skips it's turn every time. On this step it's important" +
+                              "\nto teach it to answer your turns.\n");
             var game = new Game();
             game.Start();
         }
