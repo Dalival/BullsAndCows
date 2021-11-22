@@ -131,18 +131,6 @@ namespace BullsAndCows
             var uniqDigitsCount = numberString.Distinct().Count();
 
             return uniqDigitsCount == numberString.Length;
-
-            // var firstSymbol = numberString[0];
-            // var secondSymbol = numberString[1];
-            // var thirdSymbol = numberString[2];
-            // var forthSymbol = numberString[3];
-            //
-            // return firstSymbol != secondSymbol
-            //        && firstSymbol != thirdSymbol
-            //        && firstSymbol != forthSymbol
-            //        && secondSymbol != thirdSymbol
-            //        && secondSymbol != forthSymbol
-            //        && thirdSymbol != forthSymbol;
         }
 
         private Attempt MakeAttempt(Number number)
