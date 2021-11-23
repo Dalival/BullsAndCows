@@ -1,14 +1,15 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace BullsAndCows
 {
     public class Attempt
     {
-        public Number Number { get; set; }
+        public Number Number { get; }
 
-        public int Bulls { get; set; }
+        public int Bulls { get; }
 
-        public int Cows { get; set; }
+        public int Cows { get; }
 
 
         public Attempt(Number number, int bulls, int cows)
@@ -45,6 +46,24 @@ namespace BullsAndCows
             }
 
             return str.ToString().Trim();
+        }
+
+        public override bool Equals(object? o)
+        {
+            return o is Attempt other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Number, Bulls, Cows);
+        }
+
+
+        private bool Equals(Attempt other)
+        {
+            return Equals(Number, other.Number)
+                   && Bulls == other.Bulls
+                   && Cows == other.Cows;
         }
     }
 }
