@@ -13,6 +13,8 @@ namespace BullsAndCows
                               "\nto teach it to answer your turns.\n");
             var game = new Game();
             game.Start();
+
+            Console.ReadKey();
         }
     }
 }
