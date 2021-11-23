@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 
 namespace BullsAndCows
 {
     public class Game
     {
+        private readonly Random _random;
+
+
         public Number ComputerNumber { get; set; }
 
         public Number UserNumber { get; set; }
@@ -20,9 +24,11 @@ namespace BullsAndCows
 
         public Game()
         {
+            _random = new Random();
+
             ComputerAttempts = new List<Attempt>();
             UserAttempts = new List<Attempt>();
-            ComputerNumber = Number.CreateRandomNumber();
+            ComputerNumber = Number.CreateRandomNumber(_random);
             InitializePossibleVariants();
         }
 
@@ -30,10 +36,12 @@ namespace BullsAndCows
         public void Start()
         {
             UserNumber = GetUserInputNumber();
-            Console.WriteLine($"Your number: {UserNumber}");
-            Console.WriteLine($"PC number: {ComputerNumber}");
             while (true)
             {
+                Thread.Sleep(1000);
+                Console.Clear();
+                Console.WriteLine($"Your number: {UserNumber}");
+                Console.WriteLine($"PC number: {ComputerNumber}");
                 //var userNumber = GetUserInputNumber();
                 //StartUserAttempt(userNumber);
                 StartComputerAttempt();
@@ -131,8 +139,7 @@ namespace BullsAndCows
 
         private Number GuessNumber()
         {
-            var random = new Random();
-            var index = random.Next(0, PossibleVariants.Count);
+            var index = _random.Next(0, PossibleVariants.Count);
             var number = PossibleVariants[index];
 
             return number;
@@ -142,44 +149,24 @@ namespace BullsAndCows
         private void UpdatePossibleVariants()
         {
             var lastAttempt = ComputerAttempts.Last();
-
-            // Убрать варианты, где более или менее чем Б+K цифр данного числа (покрывает вариант, когда у нас НИЧЕГО)
-            PossibleVariants.RemoveAll(n => n.Digits.Intersect(lastAttempt.Number.Digits).Count() != lastAttempt.Bulls + lastAttempt.Cows);
-
-            // Если толькo быки, то убрать все цифро-позиции
-            if (lastAttempt.Cows == 0)
+            var numbersToRemove = new List<Number>();
+            foreach (var number in PossibleVariants)
             {
-                PossibleVariants.RemoveAll(number =>
-                    number.Digits[0] == lastAttempt.Number.Digits[0]
-                    || number.Digits[1] == lastAttempt.Number.Digits[1]
-                    || number.Digits[2] == lastAttempt.Number.Digits[2]
-                    || number.Digits[3] == lastAttempt.Number.Digits[3]);
-            }
-            // Если коровы есть, то убрать варианты, где нет хотя бы К цифро-позиций
-            else
-            {
-                var numbersToRemove = new List<Number>();
-
-                foreach (var number in PossibleVariants)
+                var attempt = MakeAttempt(lastAttempt.Number, number);
+                if (!lastAttempt.Equals(attempt))
                 {
-                    var digitOnPositionMatches = 0;
-
-                    for (var i = 0; i < 4; i++)
-                    {
-                        if (number.Digits[i] == lastAttempt.Number.Digits[i])
-                        {
-                            digitOnPositionMatches++;
-                        }
-                    }
-
-                    if (digitOnPositionMatches < lastAttempt.Cows)
-                    {
-                        numbersToRemove.Add(number);
-                    }
+                    numbersToRemove.Add(number);
                 }
-
-                PossibleVariants = PossibleVariants.Except(numbersToRemove).ToList();
             }
+
+            PossibleVariants = PossibleVariants.Except(numbersToRemove).ToList();
+
+            // PossibleVariants = PossibleVariants
+            //     .Except(PossibleVariants
+            //         .Select(number => MakeAttempt(lastAttempt.Number, number))
+            //         .Where(attempt => !attempt.Equals(lastAttempt))
+            //         .Select(attempt => attempt.Number))
+            //     .ToList();
         }
     }
 }
