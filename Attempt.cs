@@ -22,13 +22,15 @@ namespace BullsAndCows
 
         public override string ToString()
         {
-            if (Cows == 4)
-            {
-                return "WIN!";
-            }
-
             var str = new StringBuilder();
             str.Append($"{Number} – ");
+
+            if (Cows == 4)
+            {
+                str.Append("WIN!");
+
+                return str.ToString();
+            }
 
             if (Cows != 0)
             {
