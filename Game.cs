@@ -29,8 +29,8 @@ namespace BullsAndCows
         public void Start()
         {
             UserNumber = GetUserInputNumber();
-            Console.WriteLine($"Ваше число: {UserNumber}");
-            Console.WriteLine($"Число соперника: {ComputerNumber}");
+            Console.WriteLine($"Your number: {UserNumber}");
+            Console.WriteLine($"PC number: {ComputerNumber}");
             while (true)
             {
                 var userNumber = GetUserInputNumber();
@@ -106,18 +106,18 @@ namespace BullsAndCows
         {
             while (true)
             {
-                Console.WriteLine("Введите четырёхзначное число. Каждую цифру можно использовать только один раз.\n");
+                Console.WriteLine("Enter a four-digit number. Each digit can only be used once.");
                 var input = Console.ReadLine();
 
                 if (!int.TryParse(input, out var numberInt))
                 {
-                    Console.WriteLine("Неверный ввод. Попробуйте еще раз.\n");
+                    Console.WriteLine("Wrong input. Try again.");
                     continue;
                 }
 
                 if (!Number.IsIntAllowed(numberInt))
                 {
-                    Console.WriteLine("Недопустимое число. Попробуйте еще раз.\n");
+                    Console.WriteLine("Invalid number. Try again.");
                     continue;
                 }
 
