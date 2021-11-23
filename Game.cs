@@ -14,14 +14,14 @@ namespace BullsAndCows
 
         public List<Attempt> UserAttempts { get; set; }
 
-        public List<int> ProbablyVariants { get; set; }
+        public List<Number> ProbablyVariants { get; set; }
 
 
         public Game()
         {
             ComputerAttempts = new List<Attempt>();
             UserAttempts = new List<Attempt>();
-            InitializeComputerNumber();
+            ComputerNumber = Number.CreateRandomNumber();
             InitializeProbablyVariants();
         }
 
@@ -62,23 +62,13 @@ namespace BullsAndCows
                     continue;
                 }
 
-                if (!IsNumberValid(numberInt))
+                if (!Number.IsIntAllowed(numberInt))
                 {
                     Console.WriteLine("Недопустимое число. Попробуйте еще раз.\n");
                     continue;
                 }
 
-                var numberString = numberInt.ToString();
-                if (numberInt < 1000)
-                {
-                    numberString = numberString.Insert(0, "0");
-                }
-
-                var number = new Number(
-                    int.Parse(numberString[0].ToString()),
-                    int.Parse(numberString[1].ToString()),
-                    int.Parse(numberString[2].ToString()),
-                    int.Parse(numberString[3].ToString()));
+                var number = new Number(numberInt);
 
                 return number;
             }
@@ -87,50 +77,15 @@ namespace BullsAndCows
         private void InitializeProbablyVariants()
         {
             var variants = new List<int>();
-
             for (var i = 0123; i < 9877; i++)
             {
                 variants.Add(i);
             }
 
-            ProbablyVariants = variants.Where(IsNumberValid).ToList();
-        }
-
-        private void InitializeComputerNumber()
-        {
-            var digits = new List<int>();
-            var allowedSymbols = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
-            var random = new Random();
-
-            var allowedSymbolsCount = 10;
-            for (var i = 0; i < 4; i++)
-            {
-                var index = random.Next(0, allowedSymbolsCount - 1);
-                var digit = allowedSymbols[index];
-                digits.Add(digit);
-                allowedSymbols.Remove(digit);
-                allowedSymbolsCount--;
-            }
-
-            ComputerNumber = new Number(digits);
-        }
-
-        private bool IsNumberValid(int number)
-        {
-            if (number is < 123 or > 9876)
-            {
-                return false;
-            }
-
-            var numberString = number.ToString();
-            if (number < 1000)
-            {
-                numberString = numberString.Insert(0, "0");
-            }
-
-            var uniqDigitsCount = numberString.Distinct().Count();
-
-            return uniqDigitsCount == numberString.Length;
+            ProbablyVariants = variants
+                .Where(Number.IsIntAllowed)
+                .Select(x => new Number(x))
+                .ToList();
         }
 
         private Attempt MakeAttempt(Number number)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BullsAndCows
 {
@@ -7,14 +9,66 @@ namespace BullsAndCows
         public List<int> Digits { get; set; }
 
 
-        public Number(List<int> digits)
+        public Number(int number)
+        {
+            if (!IsIntAllowed(number))
+            {
+                throw new ArgumentException("Number should contain four different digits.");
+            }
+
+            Digits = new List<int>
+            {
+                number / 1000,
+                number % 1000 / 100,
+                number % 100 / 10,
+                number % 10
+            };
+        }
+
+
+        private Number(List<int> digits)
         {
             Digits = digits;
         }
 
-        public Number(int first, int second, int third, int fourth)
+
+        public static Number CreateRandomNumber()
         {
-            Digits = new List<int> { first, second, third, fourth };
+            var digits = new List<int>();
+            var allowedSymbols = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+            var random = new Random();
+
+            var allowedSymbolsCount = 10;
+            for (var i = 0; i < 4; i++)
+            {
+                var index = random.Next(0, allowedSymbolsCount - 1);
+                var digit = allowedSymbols[index];
+                digits.Add(digit);
+                allowedSymbols.Remove(digit);
+                allowedSymbolsCount--;
+            }
+
+            return new Number(digits);
+        }
+
+        public static bool IsIntAllowed(int number)
+        {
+            if (number is < 123 or > 9876)
+            {
+                return false;
+            }
+
+            var digitsList = new List<int>
+            {
+                number / 1000,
+                number % 1000 / 100,
+                number % 100 / 10,
+                number % 10
+            };
+
+            var uniqDigitsCount = digitsList.Distinct().Count();
+
+            return uniqDigitsCount == digitsList.Count;
         }
 
 
