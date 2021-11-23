@@ -29,14 +29,14 @@ namespace BullsAndCows
             var str = new StringBuilder();
             str.Append($"{Number} – ");
 
-            if (Bulls != 0)
-            {
-                str.Append(Bulls + "B ");
-            }
-
             if (Cows != 0)
             {
-                str.Append(Cows + "C");
+                str.Append(Cows + "C ");
+            }
+
+            if (Bulls != 0)
+            {
+                str.Append(Bulls + "B");
             }
 
             if (Bulls == 0 && Cows == 0)
@@ -44,7 +44,7 @@ namespace BullsAndCows
                 str.Append("nothing");
             }
 
-            return str.ToString();
+            return str.ToString().Trim();
         }
     }
 }
