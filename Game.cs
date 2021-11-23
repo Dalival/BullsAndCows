@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace BullsAndCows
 {
@@ -14,7 +15,7 @@ namespace BullsAndCows
 
         public List<Attempt> UserAttempts { get; set; }
 
-        public List<Number> ProbablyVariants { get; set; }
+        public List<Number> PossibleVariants { get; set; }
 
 
         public Game()
@@ -22,7 +23,7 @@ namespace BullsAndCows
             ComputerAttempts = new List<Attempt>();
             UserAttempts = new List<Attempt>();
             ComputerNumber = Number.CreateRandomNumber();
-            InitializeProbablyVariants();
+            InitializePossibleVariants();
         }
 
 
@@ -33,16 +34,16 @@ namespace BullsAndCows
             Console.WriteLine($"PC number: {ComputerNumber}");
             while (true)
             {
-                var userNumber = GetUserInputNumber();
-                StartUserAttempt(userNumber);
+                //var userNumber = GetUserInputNumber();
+                //StartUserAttempt(userNumber);
                 StartComputerAttempt();
 
-                foreach (var attempt in UserAttempts)
+                foreach (var attempt in ComputerAttempts)
                 {
                     Console.WriteLine(attempt);
                 }
 
-                if (UserAttempts.Last().Cows == 4)
+                if (ComputerAttempts.Last().Cows == 4)
                 {
                     break;
                 }
@@ -50,7 +51,7 @@ namespace BullsAndCows
         }
 
 
-        private void InitializeProbablyVariants()
+        private void InitializePossibleVariants()
         {
             var variants = new List<int>();
             for (var i = 0123; i < 9877; i++)
@@ -58,7 +59,7 @@ namespace BullsAndCows
                 variants.Add(i);
             }
 
-            ProbablyVariants = variants
+            PossibleVariants = variants
                 .Where(Number.IsIntAllowed)
                 .Select(x => new Number(x))
                 .ToList();
@@ -77,6 +78,7 @@ namespace BullsAndCows
             var attempt = MakeAttempt(number, UserNumber);
 
             ComputerAttempts.Add(attempt);
+            UpdatePossibleVariants();
         }
 
         private Attempt MakeAttempt(Number attemptNumber, Number numberToGuess)
@@ -127,18 +129,57 @@ namespace BullsAndCows
             }
         }
 
-        /* 1Б   2Б   3Б   4Б
-         * 1К   2К   3К
-         * 1Б 1К    1Б 2К
-         * 2Б 1К    2Б 2К
-         * 3Б 1К
-         *
-         * 1. Если nБ, убрать все варианты, где более n цифр данного числа. Убрать все цифро-позиции.
-         * 2. Если nК, убрать все варианты, где нет хотя бы n цифро-позиций данного числа.
-         */
         private Number GuessNumber()
         {
-            throw new NotImplementedException();
+            var random = new Random();
+            var index = random.Next(0, PossibleVariants.Count);
+            var number = PossibleVariants[index];
+
+            return number;
+        }
+
+        // Must be called after each computer's attempt
+        private void UpdatePossibleVariants()
+        {
+            var lastAttempt = ComputerAttempts.Last();
+
+            // Убрать варианты, где более или менее чем Б+K цифр данного числа (покрывает вариант, когда у нас НИЧЕГО)
+            PossibleVariants.RemoveAll(n => n.Digits.Intersect(lastAttempt.Number.Digits).Count() != lastAttempt.Bulls + lastAttempt.Cows);
+
+            // Если толькo быки, то убрать все цифро-позиции
+            if (lastAttempt.Cows == 0)
+            {
+                PossibleVariants.RemoveAll(number =>
+                    number.Digits[0] == lastAttempt.Number.Digits[0]
+                    || number.Digits[1] == lastAttempt.Number.Digits[1]
+                    || number.Digits[2] == lastAttempt.Number.Digits[2]
+                    || number.Digits[3] == lastAttempt.Number.Digits[3]);
+            }
+            // Если коровы есть, то убрать варианты, где нет хотя бы К цифро-позиций
+            else
+            {
+                var numbersToRemove = new List<Number>();
+
+                foreach (var number in PossibleVariants)
+                {
+                    var digitOnPositionMatches = 0;
+
+                    for (var i = 0; i < 4; i++)
+                    {
+                        if (number.Digits[i] == lastAttempt.Number.Digits[i])
+                        {
+                            digitOnPositionMatches++;
+                        }
+                    }
+
+                    if (digitOnPositionMatches < lastAttempt.Cows)
+                    {
+                        numbersToRemove.Add(number);
+                    }
+                }
+
+                PossibleVariants = PossibleVariants.Except(numbersToRemove).ToList();
+            }
         }
     }
 }
