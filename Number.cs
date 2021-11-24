@@ -37,14 +37,12 @@ namespace BullsAndCows
             var digits = new List<int>();
             var allowedSymbols = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
-            var allowedSymbolsCount = 10;
             for (var i = 0; i < 4; i++)
             {
-                var index = random.Next(0, allowedSymbolsCount - 1);
+                var index = random.Next(0, allowedSymbols.Count);
                 var digit = allowedSymbols[index];
                 digits.Add(digit);
                 allowedSymbols.Remove(digit);
-                allowedSymbolsCount--;
             }
 
             return new Number(digits);
