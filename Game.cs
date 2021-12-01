@@ -11,13 +11,13 @@ namespace BullsAndCows
         private readonly Random _random;
 
 
-        public Number ComputerNumber { get; set; }
+        public Number ComputerNumber { get; }
 
         public Number UserNumber { get; set; }
 
-        public List<Attempt> ComputerAttempts { get; set; }
+        public List<Attempt> ComputerAttempts { get; }
 
-        public List<Attempt> UserAttempts { get; set; }
+        public List<Attempt> UserAttempts { get; }
 
         public List<Number> PossibleVariants { get; set; }
 
@@ -41,17 +41,24 @@ namespace BullsAndCows
                 Thread.Sleep(1000);
                 Console.Clear();
                 Console.WriteLine($"Your number: {UserNumber}");
-                Console.WriteLine($"PC number: {ComputerNumber}");
-                //var userNumber = GetUserInputNumber();
-                //StartUserAttempt(userNumber);
+                var userNumber = GetUserInputNumber();
+                StartUserAttempt(userNumber);
                 StartComputerAttempt();
 
+                Console.WriteLine("Computer's attempts:");
                 foreach (var attempt in ComputerAttempts)
                 {
                     Console.WriteLine(attempt);
                 }
 
-                if (ComputerAttempts.Last().Cows == 4)
+                Console.WriteLine("Your attempts:");
+                foreach (var attempt in UserAttempts)
+                {
+                    Console.WriteLine(attempt);
+                }
+
+                if (ComputerAttempts.Last().Cows == 4
+                    || UserAttempts.Last().Cows == 4)
                 {
                     break;
                 }
@@ -62,7 +69,7 @@ namespace BullsAndCows
         private void InitializePossibleVariants()
         {
             var variants = new List<int>();
-            for (var i = 0123; i < 9877; i++)
+            for (var i = 123; i < 9877; i++)
             {
                 variants.Add(i);
             }
@@ -76,7 +83,6 @@ namespace BullsAndCows
         private void StartUserAttempt(Number number)
         {
             var attempt = MakeAttempt(number, ComputerNumber);
-
             UserAttempts.Add(attempt);
         }
 
@@ -84,7 +90,6 @@ namespace BullsAndCows
         {
             var number = GuessNumber();
             var attempt = MakeAttempt(number, UserNumber);
-
             ComputerAttempts.Add(attempt);
             UpdatePossibleVariants();
         }
