@@ -16,6 +16,8 @@ namespace BullsAndCows
                               "\nAnswer: 1C 2B (1 cow and 2 bulls)" +
                               "\n\nPress any key to play the game");
             Console.ReadKey();
+            Console.Clear();
+
             var game = new Game();
             game.Start();
 
