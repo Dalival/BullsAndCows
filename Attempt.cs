@@ -50,22 +50,12 @@ namespace BullsAndCows
             return str.ToString().Trim();
         }
 
-        public override bool Equals(object? o)
-        {
-            return o is Attempt other && Equals(other);
-        }
+        public override bool Equals(object o) => o is Attempt other && Equals(other);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Number, Bulls, Cows);
-        }
+        public override int GetHashCode() => HashCode.Combine(Number, Bulls, Cows);
 
-
-        private bool Equals(Attempt other)
-        {
-            return Equals(Number, other.Number)
-                   && Bulls == other.Bulls
-                   && Cows == other.Cows;
-        }
+        private bool Equals(Attempt other) => Equals(Number, other.Number)
+                                              && Bulls == other.Bulls
+                                              && Cows == other.Cows;
     }
 }
