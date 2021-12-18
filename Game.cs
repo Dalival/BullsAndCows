@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 
 namespace BullsAndCows
@@ -35,33 +34,58 @@ namespace BullsAndCows
 
         public void Start()
         {
+            Console.WriteLine("Enter a four-digit number. Each digit can only be used once.");
             UserNumber = GetUserInputNumber();
+            Console.Clear();
+
             while (true)
             {
-                Thread.Sleep(1000);
-                Console.Clear();
-                Console.WriteLine($"Your number: {UserNumber}");
-                var userNumber = GetUserInputNumber();
-                StartUserAttempt(userNumber);
-                StartComputerAttempt();
-
-                Console.WriteLine("Computer's attempts:");
-                foreach (var attempt in ComputerAttempts)
+                Console.WriteLine("Your number: " + UserNumber);
+                Console.WriteLine("\nComputer's attempts:");
+                if (ComputerAttempts.Any())
                 {
-                    Console.WriteLine(attempt);
+                    foreach (var attempt in ComputerAttempts)
+                    {
+                        Console.WriteLine(attempt);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("none");
                 }
 
-                Console.WriteLine("Your attempts:");
-                foreach (var attempt in UserAttempts)
+                Console.WriteLine("\nYour attempts:");
+                if (UserAttempts.Any())
                 {
-                    Console.WriteLine(attempt);
+                    foreach (var attempt in UserAttempts)
+                    {
+                        Console.WriteLine(attempt);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("none");
                 }
 
-                if (ComputerAttempts.Last().Cows == 4
-                    || UserAttempts.Last().Cows == 4)
+                if (ComputerAttempts.LastOrDefault()?.Cows == 4
+                    || UserAttempts.LastOrDefault()?.Cows == 4)
                 {
                     break;
                 }
+
+                Console.WriteLine("\nYour turn. Enter a number:");
+                var userNumber = GetUserInputNumber();
+                StartUserAttempt(userNumber);
+                StartComputerAttempt();
+                Console.Write("\nComputer's turn. Choosing a number ");
+                Thread.Sleep(700);
+                Console.Write(".");
+                Thread.Sleep(700);
+                Console.Write(".");
+                Thread.Sleep(700);
+                Console.Write(".");
+                Thread.Sleep(700);
+                Console.Clear();
             }
         }
 
@@ -121,7 +145,6 @@ namespace BullsAndCows
         {
             while (true)
             {
-                Console.WriteLine("Enter a four-digit number. Each digit can only be used once.");
                 var input = Console.ReadLine();
 
                 if (!int.TryParse(input, out var numberInt))
@@ -150,7 +173,6 @@ namespace BullsAndCows
             return number;
         }
 
-        // Must be called after each computer's attempt
         private void UpdatePossibleVariants()
         {
             var lastAttempt = ComputerAttempts.Last();

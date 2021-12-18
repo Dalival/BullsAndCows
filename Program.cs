@@ -13,7 +13,7 @@ namespace BullsAndCows
                               "\ndifferent positions, they are bulls. Example:" +
                               "\n\nSecret number: 4271" +
                               "\nOpponent's try: 1234" +
-                              "\nAnswer: 1C 2B (1 cow and 2 bulls)" +
+                              "\nAnswer: 1C 2B – one cow ('2') and two bulls ('1' and '4')" +
                               "\n\nPress any key to play the game");
             Console.ReadKey();
             Console.Clear();
