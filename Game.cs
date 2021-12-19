@@ -39,10 +39,11 @@ namespace BullsAndCows
 
         public void StartComputerAttempt()
         {
+            UpdatePossibleVariants();
+
             var number = GuessNumber();
             var attempt = MakeAttempt(number, UserNumber);
             ComputerAttempts.Add(attempt);
-            UpdatePossibleVariants();
         }
 
 
@@ -93,7 +94,12 @@ namespace BullsAndCows
 
         private void UpdatePossibleVariants()
         {
-            var lastAttempt = ComputerAttempts.Last();
+            var lastAttempt = ComputerAttempts.LastOrDefault();
+            if (lastAttempt == null)
+            {
+                return;
+            }
+
             var numbersToRemove = PossibleVariants.Where(number =>
                 !Equals(lastAttempt, MakeAttempt(lastAttempt.Number, number)));
 
