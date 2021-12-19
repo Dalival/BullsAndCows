@@ -176,24 +176,10 @@ namespace BullsAndCows
         private void UpdatePossibleVariants()
         {
             var lastAttempt = ComputerAttempts.Last();
-            var numbersToRemove = new List<Number>();
-            foreach (var number in PossibleVariants)
-            {
-                var attempt = MakeAttempt(lastAttempt.Number, number);
-                if (!lastAttempt.Equals(attempt))
-                {
-                    numbersToRemove.Add(number);
-                }
-            }
+            var numbersToRemove = PossibleVariants.Where(number =>
+                !Equals(lastAttempt, MakeAttempt(lastAttempt.Number, number)));
 
             PossibleVariants = PossibleVariants.Except(numbersToRemove).ToList();
-
-            // PossibleVariants = PossibleVariants
-            //     .Except(PossibleVariants
-            //         .Select(number => MakeAttempt(lastAttempt.Number, number))
-            //         .Where(attempt => !attempt.Equals(lastAttempt))
-            //         .Select(attempt => attempt.Number))
-            //     .ToList();
         }
     }
 }
