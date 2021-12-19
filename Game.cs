@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace BullsAndCows
 {
@@ -32,85 +31,13 @@ namespace BullsAndCows
         }
 
 
-        public void Start()
-        {
-            Console.WriteLine("Enter a four-digit number. Each digit can only be used once.");
-            UserNumber = GetUserInputNumber();
-            Console.Clear();
-
-            while (true)
-            {
-                Console.WriteLine("Your number: " + UserNumber);
-                Console.WriteLine("\nComputer's attempts:");
-                if (ComputerAttempts.Any())
-                {
-                    foreach (var attempt in ComputerAttempts)
-                    {
-                        Console.WriteLine(attempt);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("none");
-                }
-
-                Console.WriteLine("\nYour attempts:");
-                if (UserAttempts.Any())
-                {
-                    foreach (var attempt in UserAttempts)
-                    {
-                        Console.WriteLine(attempt);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("none");
-                }
-
-                if (ComputerAttempts.LastOrDefault()?.Cows == 4
-                    || UserAttempts.LastOrDefault()?.Cows == 4)
-                {
-                    break;
-                }
-
-                Console.WriteLine("\nYour turn. Enter a number:");
-                var userNumber = GetUserInputNumber();
-                StartUserAttempt(userNumber);
-                StartComputerAttempt();
-                Console.Write("\nComputer's turn. Choosing a number ");
-                Thread.Sleep(700);
-                Console.Write(".");
-                Thread.Sleep(700);
-                Console.Write(".");
-                Thread.Sleep(700);
-                Console.Write(".");
-                Thread.Sleep(700);
-                Console.Clear();
-            }
-        }
-
-
-        private void InitializePossibleVariants()
-        {
-            var variants = new List<int>();
-            for (var i = 123; i < 9877; i++)
-            {
-                variants.Add(i);
-            }
-
-            PossibleVariants = variants
-                .Where(Number.IsIntAllowed)
-                .Select(x => new Number(x))
-                .ToList();
-        }
-
-        private void StartUserAttempt(Number number)
+        public void StartUserAttempt(Number number)
         {
             var attempt = MakeAttempt(number, ComputerNumber);
             UserAttempts.Add(attempt);
         }
 
-        private void StartComputerAttempt()
+        public void StartComputerAttempt()
         {
             var number = GuessNumber();
             var attempt = MakeAttempt(number, UserNumber);
@@ -118,7 +45,8 @@ namespace BullsAndCows
             UpdatePossibleVariants();
         }
 
-        private Attempt MakeAttempt(Number attemptNumber, Number numberToGuess)
+
+        private static Attempt MakeAttempt(Number attemptNumber, Number numberToGuess)
         {
             var bulls = 0;
             var cows = 0;
@@ -141,28 +69,18 @@ namespace BullsAndCows
             return attempt;
         }
 
-        private Number GetUserInputNumber()
+        private void InitializePossibleVariants()
         {
-            while (true)
+            var variants = new List<int>();
+            for (var i = 123; i < 9877; i++)
             {
-                var input = Console.ReadLine();
-
-                if (!int.TryParse(input, out var numberInt))
-                {
-                    Console.WriteLine("Wrong input. Try again.");
-                    continue;
-                }
-
-                if (!Number.IsIntAllowed(numberInt))
-                {
-                    Console.WriteLine("Invalid number. Try again.");
-                    continue;
-                }
-
-                var number = new Number(numberInt);
-
-                return number;
+                variants.Add(i);
             }
+
+            PossibleVariants = variants
+                .Where(Number.IsIntAllowed)
+                .Select(x => new Number(x))
+                .ToList();
         }
 
         private Number GuessNumber()
