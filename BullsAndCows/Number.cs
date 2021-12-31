@@ -13,7 +13,7 @@ namespace BullsAndCows
         {
             if (!IsIntAllowed(number))
             {
-                throw new ArgumentException("Number should contain four different digits.");
+                throw new ArgumentException("Number must contain four different digits.");
             }
 
             Digits = new List<int>
