@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -6,19 +7,6 @@ namespace BullsAndCows
 {
     public class GameController
     {
-        private const string OpeningText = "The players each write a 4-digit secret number." +
-                                           "\nThe digits must be all different. Then, in turn, the players try to" +
-                                           "\nguess their opponent's number who gives the number of matches. If the" +
-                                           "\nmatching digits are in their right positions, they are cows, if in" +
-                                           "\ndifferent positions, they are bulls. Example:" +
-                                           "\n" +
-                                           "\nSecret number: 4271" +
-                                           "\nOpponent's try: 1234" +
-                                           "\nAnswer: 1C 2B – one cow ('2') and two bulls ('1' and '4')" +
-                                           "\n" +
-                                           "\nPress any key to play the game";
-
-
         private readonly Game _game;
 
 
@@ -30,7 +18,9 @@ namespace BullsAndCows
 
         public void Start()
         {
-            Console.WriteLine(OpeningText);
+            var openingText =  File.OpenText("opening.txt").ReadToEnd();
+
+            Console.WriteLine(openingText);
             Console.ReadKey();
             Console.Clear();
 
