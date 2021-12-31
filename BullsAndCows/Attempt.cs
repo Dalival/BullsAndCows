@@ -14,7 +14,18 @@ namespace BullsAndCows
 
         public Attempt(Number number, int bulls, int cows)
         {
-            Number = number;
+            Number = number ?? throw new ArgumentNullException(nameof(number), "Number cannot be null.");
+
+            if (bulls < 0 || cows < 0)
+            {
+                throw new ArgumentException("Bulls and cows amounts are not possible to be negative value.");
+            }
+
+            if (bulls + cows > 4 || (bulls == 1 && cows == 3))
+            {
+                throw new InvalidOperationException("The situation of {bulls}B{cows}C is impossible.");
+            }
+
             Bulls = bulls;
             Cows = cows;
         }
