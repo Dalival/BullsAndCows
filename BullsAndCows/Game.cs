@@ -47,29 +47,6 @@ namespace BullsAndCows
         }
 
 
-        private static Attempt MakeAttempt(Number attemptNumber, Number numberToGuess)
-        {
-            var bulls = 0;
-            var cows = 0;
-            foreach (var digit in attemptNumber.Digits)
-            {
-                var indexInEnteredNumber = attemptNumber.Digits.IndexOf(digit);
-                var indexInComputerNumber = numberToGuess.Digits.IndexOf(digit);
-                if (indexInComputerNumber == indexInEnteredNumber)
-                {
-                    cows++;
-                }
-                else if (indexInComputerNumber != -1)
-                {
-                    bulls++;
-                }
-            }
-
-            var attempt = new Attempt(attemptNumber, bulls, cows);
-
-            return attempt;
-        }
-
         private void InitializePossibleVariants()
         {
             var variants = new List<int>();
@@ -104,6 +81,29 @@ namespace BullsAndCows
                 !Equals(lastAttempt, MakeAttempt(lastAttempt.Number, number)));
 
             PossibleVariants = PossibleVariants.Except(numbersToRemove).ToList();
+        }
+
+        private Attempt MakeAttempt(Number attemptNumber, Number numberToGuess)
+        {
+            var bulls = 0;
+            var cows = 0;
+            foreach (var digit in attemptNumber.Digits)
+            {
+                var indexInEnteredNumber = attemptNumber.Digits.IndexOf(digit);
+                var indexInComputerNumber = numberToGuess.Digits.IndexOf(digit);
+                if (indexInComputerNumber == indexInEnteredNumber)
+                {
+                    cows++;
+                }
+                else if (indexInComputerNumber != -1)
+                {
+                    bulls++;
+                }
+            }
+
+            var attempt = new Attempt(attemptNumber, bulls, cows);
+
+            return attempt;
         }
     }
 }

@@ -54,6 +54,7 @@ namespace BullsAndCows
 
         public override int GetHashCode() => HashCode.Combine(Number, Bulls, Cows);
 
+
         private bool Equals(Attempt other) => Equals(Number, other.Number)
                                               && Bulls == other.Bulls
                                               && Cows == other.Cows;
